@@ -1,0 +1,45 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+enum AnalysisStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model AnalysisRequest {
+  id             String         @id @default(cuid())
+  targetLocation String         
+  userObjective  String         @db.Text
+  status         AnalysisStatus @default(PENDING)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  activityLogs   AgentStepLog[]
+  finalReport    ClimateReport?
+}
+
+model AgentStepLog {
+  id             String          @id @default(cuid())
+  analysisId     String
+  analysis       AnalysisRequest @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  eventTitle     String          
+  payloadDetails String          @db.Text 
+  createdAt      DateTime        @default(now())
+}
+
+model ClimateReport {
+  id             String          @id @default(cuid())
+  analysisId     String          @unique
+  analysis       AnalysisRequest @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  markdownBody   String          @db.Text 
+  metricsSummary Json            
+  createdAt      DateTime        @default(now())
+}
