@@ -12,13 +12,13 @@ export const searchPolicyContext = {
   }),
   execute: async ({ query }: { query: string }) => {
     try {
-      const response = await fetch("https://tavily.com", {
+      const response = await fetch("https://api.tavily.com/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           api_key: process.env.TAVILY_API_KEY,
           query: `${query} Kenya climate energy policy`,
-          num_results: 3,
+          max_results: 3,
         }),
       });
 
@@ -29,13 +29,10 @@ export const searchPolicyContext = {
         success: true,
         data: JSON.stringify(data.results),
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
-        data:
-          error instanceof Error
-            ? error.message
-            : "Failed web context gathering sequence.",
+        data: "Failed web context gathering sequence.",
       };
     }
   },
@@ -60,7 +57,7 @@ export const fetchRegionalClimateData = {
     longitude: number;
   }) => {
     try {
-      const url = `https://open-meteo.com{latitude}&longitude=${longitude}&daily=solar_radiation_sum,rain_sum&timezone=auto`;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=solar_radiation_sum,rain_sum&timezone=auto`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error("Weather API connection failure");
@@ -92,7 +89,7 @@ export const fetchRegionalClimateData = {
           lng: longitude,
         },
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         metrics: {
