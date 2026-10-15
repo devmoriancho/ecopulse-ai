@@ -1,6 +1,8 @@
 import { getRecentAnalyses } from "@/lib/agent/db";
 import { startClimateAnalysis } from "./actions/agent";
 import { AgentStepLog } from "@/generated/prisma/browser";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default async function DashboardPage() {
   const analyses = await getRecentAnalyses();
@@ -98,16 +100,55 @@ export default async function DashboardPage() {
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <section className="lg:col-span-2 space-y-6">
-          <div className="p-6 h-300px rounded-xl bg-bg-surface border border-border-subtle flex flex-col items-center justify-center text-center">
-            <p className="text-text-muted font-medium">What you asked for</p>
-            <p className="text-xs text-text-muted mt-3 max-w-md italic border border-dashed border-border-subtle p-3 rounded">
-              {activeRecord
-                ? activeRecord.userObjective
-                : "Nothing has been entered yet."}
-            </p>
+        <section className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-6 rounded-xl bg-bg-surface border border-border-subtle flex flex-col space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold tracking-wider uppercase text-text-muted">
+                Target Core Analytics Report
+              </span>
+            </div>
+            <div className="w-full text-left text-sm text-text-main leading-relaxed prose prose-invert max-w-none space-y-4 overflow-y-auto max-h-350px p-4 bg-bg-terminal rounded border border-border-subtle">
+              {activeRecord && activeRecord.finalReport ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {activeRecord.finalReport.markdownBody}
+                </ReactMarkdown>
+              ) : activeRecord ? (
+                <p className="text-xs text-text-muted italic">
+                  🔄 AI Engine pipeline active for objective: &quot;
+                  {activeRecord.userObjective}&quot;. Final climate text report
+                  compiling in background arrays...
+                </p>
+              ) : (
+                <p className="text-xs text-text-muted italic">
+                  ✨ System standby sequence. Awaiting execution trigger
+                  parameter payloads to compile report structures...
+                </p>
+              )}
+            </div>
+          </div>
+              
+          <div className="p-6 rounded-xl bg-bg-surface border border-border-subtle flex flex-col space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold tracking-wider uppercase text-text-muted">
+                Regional Solar Radiation Index
+              </span>
+            </div>
+            <div className="flex-1 flex flex-col items-center justify-center min-h-300px bg-bg-terminal rounded border border-border-subtle p-4 text-center">
+              <div className="h-12 w-12 rounded-lg bg-bg-surface border border-border-subtle flex items-center justify-center mb-3">
+                <span className="text-brand-primary text-xl font-bold">📊</span>
+              </div>
+              <p className="text-sm font-medium text-text-main">
+                Irrational Metrics Grid Workspace
+              </p>
+              <p className="text-xs text-text-muted max-w-xs mt-1 leading-relaxed">
+                {activeRecord && activeRecord.status === "COMPLETED"
+                  ? "Recharts loading active vector arrays out of Neon JSON data packets..."
+                  : "Awaiting calculation milestone finalization to populate energy graph segments."}
+              </p>
+            </div>
           </div>
         </section>
+
         <aside className="p-6 rounded-xl bg-bg-terminal border border-border-subtle flex flex-col min-h-300px">
           <h2 className="text-sm font-semibold tracking-wider uppercase text-text-muted mb-4">
             Updates
