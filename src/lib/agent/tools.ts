@@ -3,7 +3,7 @@ import { z } from "zod";
 export const searchPolicyContext = {
   description:
     "Search the web for regional grid regulations, agricultural policies, and climate initiatives.",
-  parameters: z.object({
+  inputSchema: z.object({
     query: z
       .string()
       .describe(
@@ -41,7 +41,7 @@ export const searchPolicyContext = {
 export const fetchRegionalClimateData = {
   description:
     "Fetch real-time and historical solar irradiance and weather metrics for a specific coordinate zone.",
-  parameters: z.object({
+  inputSchema: z.object({
     latitude: z
       .number()
       .describe("The precise decimal latitude coordinate of the target area."),
