@@ -26,3 +26,12 @@ Autonomous Climate & Energy Intelligence Engine.
 - [x] Connected real-time system failure event logging into Neon PostgreSQL cloud tables
 - [x] Engineered production-ready tool accessors (`tools.ts`) linking live Open-Meteo & Tavily Search networks
 - [x] Integrated Markdown parsing systems (`react-markdown`) and side-by-side analytics grid interfaces
+
+### 🔄 Upstream API Migration Registry
+
+| Old Legacy Path              | New Production Path (Fixed)                     |
+| :--------------------------- | :---------------------------------------------- |
+| `google("gemini-2.5-flash")` | `googleStudio.interactions("gemini-3.8-flash")` |
+| `maxSteps: 6`                | `stopWhen: stepCountIs(6)`                      |
+| `call.args`                  | `call.input`                                    |
+| `call.text`                  | `call.toolCallId`                               |
